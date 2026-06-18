@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}SQLi Playground{% endblock %}
+{% block content %}
+<div class="hero-card">
+  <div class="hero-copy">
+    <span class="eyebadge">Interactive</span>
+    <h1>SQL Injection Playground</h1>
+    <p>Learn SQLi techniques step-by-step with live vulnerable endpoints, detection tooling, and safe code comparisons.</p>
+    <div class="button-group">
+      <a class="button" href="/login">Login</a>
+      <a class="button" href="/search">Search</a>
+      <a class="button" href="/search-safe">Safe</a>
+      <a class="button" href="/products">Products</a>
+    </div>
+  </div>
+  <div class="hero-panel">
+    <div class="panel-item">
+      <h3>Login Bypass</h3>
+      <p>Test boolean logic and comments to bypass authentication.</p>
+    </div>
+    <div class="panel-item">
+      <h3>Data Extraction</h3>
+      <p>Use UNION and error responses to enumerate tables and values.</p>
+    </div>
+    <div class="panel-item">
+      <h3>Blind SQLi</h3>
+      <p>Probe profile queries with true/false payloads and timing delays.</p>
+    </div>
+  </div>
+</div>
+<div class="card cards-grid">
+  <div>
+    <h2>How to use</h2>
+    <p>Open each page, send injection payloads, and compare with safe query results. The home links route to all practical exploit pages.</p>
+  </div>
+  <div>
+    <h2>Challenge track</h2>
+    <p>Complete the missions page to learn SQLi discovery techniques and earn the hidden flag.</p>
+  </div>
+</div>
+{% endblock %}

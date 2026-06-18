@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Challenges - SQLi Playground{% endblock %}
+{% block content %}
+<div class="page-card page-card--wide">
+  <div class="page-card__head">
+    <span class="eyebadge">Challenge</span>
+    <h1>SQL Injection Missions</h1>
+    <p>Complete the steps below to practice increasingly advanced SQLi techniques.</p>
+  </div>
+  <div class="page-card__body">
+    <div class="challenge-list">
+      <div class="challenge-item"><strong>1.</strong> Find the number of columns. Use `UNION SELECT NULL` on search/product pages.</div>
+      <div class="challenge-item"><strong>2.</strong> Discover the database name. Use error-based SQLi or `PRAGMA database_list`.</div>
+      <div class="challenge-item"><strong>3.</strong> List all tables. Extract rows from `sqlite_master`.</div>
+      <div class="challenge-item"><strong>4.</strong> Extract admin username. Use hidden admin search or UNION payloads.</div>
+      <div class="challenge-item"><strong>5.</strong> Extract admin password hash from `admin_credentials`.</div>
+      <div class="challenge-item"><strong>6.</strong> Login as administrator with a bypass or stolen credentials.</div>
+    </div>
+    {% if flag %}
+    <div class="flag"><strong>Challenge complete!</strong> Flag: {{ flag }}</div>
+    {% endif %}
+    <a class="text-link" href="/">Back to home</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Admin Search - SQLi Playground{% endblock %}
+{% block content %}
+<div class="page-card page-card--wide">
+  <div class="page-card__head">
+    <span class="eyebadge">Hidden</span>
+    <h1>Hidden Admin Search</h1>
+    <p>Use SQL injection to enumerate hidden admin rows and learn how attackers discover secret values.</p>
+  </div>
+  <div class="page-card__body">
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
+    <form method="post" class="entry-form">
+      <label>Admin query</label>
+      <input type="text" name="q" value="{{ query }}" placeholder="Search admin names or use injection...">
+      <button type="submit">Search</button>
+    </form>
+    {% if executed_sql %}
+    <div class="sql">Executed SQL: {{ executed_sql }}</div>
+    {% endif %}
+    {% if results %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Admin Name</th><th>Secret</th></tr>
+        </thead>
+        <tbody>
+          {% for row in results %}
+          <tr>
+            <td>{{ row['id'] }}</td>
+            <td>{{ row['admin_name'] }}</td>
+            <td>{{ row['secret'] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+    <a class="text-link" href="/">Back to home</a>
+  </div>
+</div>
+{% endblock %}

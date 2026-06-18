@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Product Details - SQLi Playground{% endblock %}
+{% block content %}
+<div class="page-card page-card--wide">
+  <div class="page-card__head">
+    <span class="eyebadge">Product</span>
+    <h1>Product Details</h1>
+    <p>Inspect the raw SQL used to load a product by ID. This page shows error-based injection opportunities.</p>
+  </div>
+  <div class="page-card__body">
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
+    {% if executed_sql %}
+    <div class="sql">Executed SQL: {{ executed_sql }}</div>
+    {% endif %}
+    {% if product %}
+    <div class="detail-grid">
+      <div><strong>ID</strong> {{ product['id'] }}</div>
+      <div><strong>Name</strong> {{ product['name'] }}</div>
+      <div><strong>Category</strong> {{ product['category'] }}</div>
+      <div><strong>Price</strong> ${{ product['price'] }}</div>
+      <div class="detail-full"><strong>Description</strong><br>{{ product['description'] }}</div>
+    </div>
+    {% endif %}
+    <a class="text-link" href="/products">Back to products</a>
+  </div>
+</div>
+{% endblock %}

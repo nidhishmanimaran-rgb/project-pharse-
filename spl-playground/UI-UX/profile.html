@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Profile - SQLi Playground{% endblock %}
+{% block content %}
+<div class="page-card">
+  <div class="page-card__head">
+    <span class="eyebadge">Blind SQLi</span>
+    <h1>User Profile</h1>
+    <p>Probe the profile query using payloads that return true or false. This simulates blind injection behavior.</p>
+  </div>
+  <div class="page-card__body">
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
+    <form method="post" class="entry-form">
+      <label>Profile query</label>
+      <input type="text" name="user" value="{{ user }}" placeholder="Enter username or payload">
+      <button type="submit">Load Profile</button>
+    </form>
+    {% if executed_sql %}
+    <div class="sql">Executed SQL: {{ executed_sql }}</div>
+    {% endif %}
+    {% if profile %}
+    <div class="detail-grid">
+      <div><strong>Username</strong> {{ profile['username'] }}</div>
+      <div><strong>Full Name</strong> {{ profile['fullname'] }}</div>
+      <div><strong>Email</strong> {{ profile['email'] }}</div>
+      <div><strong>Role</strong> {{ profile['role'] }}</div>
+    </div>
+    {% endif %}
+    <a class="text-link" href="/">Back to home</a>
+  </div>
+</div>
+{% endblock %}

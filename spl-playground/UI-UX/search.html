@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Search - SQLi Playground{% endblock %}
+{% block content %}
+<div class="page-card">
+  <div class="page-card__head">
+    <span class="eyebadge">{{ 'Safe' if safe else 'Vulnerable' }}</span>
+    <h1>{{ 'Safe Search' if safe else 'Vulnerable Search' }}</h1>
+    <p>Search usernames and observe how raw SQL construction behaves versus parameterized queries.</p>
+  </div>
+  <div class="page-card__body">
+    {% if message %}
+    <div class="message">{{ message }}</div>
+    {% endif %}
+    <form method="post" class="entry-form">
+      <label>Search query</label>
+      <input type="text" name="q" value="{{ query }}" placeholder="Search usernames...">
+      <button type="submit">Search</button>
+    </form>
+    {% if executed_sql %}
+    <div class="sql">Executed SQL: {{ executed_sql }}</div>
+    {% endif %}
+    {% if results %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>ID</th><th>Username</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          {% for row in results %}
+          <tr>
+            <td>{{ row['id'] }}</td>
+            <td>{{ row['username'] }}</td>
+            <td>{{ row['role'] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+    <a class="text-link" href="/">Back to home</a>
+  </div>
+</div>
+{% endblock %}
