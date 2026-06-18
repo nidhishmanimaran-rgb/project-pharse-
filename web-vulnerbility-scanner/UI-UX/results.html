@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Scan Results - {{ scan.target }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+  </head>
+  <body class="bg-dark text-light">
+    <div class="container py-5 animate-fade-in">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-5">
+        <div>
+          <h1 class="display-6 text-white mb-2">📊 Scan Results</h1>
+          <p class="text-secondary mb-1"><strong class="text-info">{{ scan.target }}</strong></p>
+          <p class="text-secondary">Scanned at <code>{{ scan.scan_time }}</code></p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="{{ url_for('download_report', scan_id=scan.id) }}" class="btn btn-primary btn-animate" title="Download as PDF">⬇ Download PDF Report</a>
+          <a href="{{ url_for('index') }}" class="btn btn-outline-light btn-animate">← Back</a>
+        </div>
+      </div>
+
+      {% set xss_count = scan.vulnerabilities|selectattr('type','equalto','xss')|list|length %}
+      {% set sqli_count = scan.vulnerabilities|selectattr('type','equalto','sqli')|list|length %}
+      {% set csrf_count = scan.vulnerabilities|selectattr('type','equalto','csrf')|list|length %}
+      {% set other_count = scan.vulnerabilities|length - xss_count - sqli_count - csrf_count %}
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="card card-glow border-0 h-100 animate-slide-up">
+            <div class="card-body p-4">
+              <h2 class="card-title text-white mb-3">📈 Scan summary</h2>
+              <table class="table table-dark table-striped mb-0">
+                <tbody>
+                  <tr>
+                    <th scope="row" class="text-secondary">Target URL</th>
+                    <td class="text-info">{{ scan.target }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="text-secondary">Scan time</th>
+                    <td>{{ scan.scan_time }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="text-secondary">Pages crawled</th>
+                    <td><strong>{{ scan.visited_pages }}</strong></td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="text-secondary">Max pages</th>
+                    <td>{{ scan.max_pages }}</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" class="text-secondary">Total issues</th>
+                    <td><strong class="text-danger">{{ scan.vulnerabilities|length }}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card card-glow border-0 h-100 animate-slide-up" style="animation-delay: 0.1s;">
+            <div class="card-body p-4">
+              <h2 class="card-title text-white mb-3">🎯 Vulnerability chart</h2>
+              <canvas id="vulnChart" height="240"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if scan.vulnerabilities %}
+      <div class="card card-glow border-0 mb-4 animate-slide-up" style="animation-delay: 0.2s;">
+        <div class="card-body p-4">
+          <h2 class="card-title mb-4 text-white">⚠️ Vulnerability table</h2>
+          <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Severity</th>
+                  <th>URL</th>
+                  <th>Evidence</th>
+                  <th>Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for vuln in scan.vulnerabilities %}
+                <tr>
+                  <td>{{ vuln.type|upper }}</td>
+                  <td><span class="badge badge-severity badge-{{ vuln.severity|lower }}">{{ vuln.severity }}</span></td>
+                  <td class="text-break">{{ vuln.url }}</td>
+                  <td class="text-break">{{ vuln.evidence }}</td>
+                  <td class="text-break">{{ vuln.details }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="alert alert-success">No vulnerabilities were found in this scan. Review the scan details and try again.</div>
+      {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const data = {
+        labels: ['XSS', 'SQLi', 'CSRF', 'Other'],
+        datasets: [{
+          data: [{{ xss_count }}, {{ sqli_count }}, {{ csrf_count }}, {{ other_count }}],
+          backgroundColor: ['#ff3860', '#ffdd57', '#4fc08d', '#8a8d93'],
+          borderColor: '#121826',
+          borderWidth: 2,
+        }]
+      };
+
+      const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+          plugins: {
+            legend: {
+              labels: { color: '#d1d5db' }
+            }
+          }
+        }
+      };
+
+      new Chart(document.getElementById('vulnChart'), config);
+    </script>
+  </body>
+</html>
